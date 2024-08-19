@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
     {
         ClearBlocks();
         playingGame = false;
+        Timer.SetActive(false);
         GameOverMenu.SetActive(false);
         MainMenu.SetActive(true);
     }

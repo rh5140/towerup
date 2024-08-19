@@ -22,13 +22,13 @@ public class Throw : MonoBehaviour
     private bool landed = false;
     private bool spawned = false;
     private double epsilon = 0.05;
-    [SerializeField] private float spawnDelay = 0.5f;
 
     private Vector3 startPosition = new Vector3(0, 0.55f, 0);
     private Quaternion startRotation = Quaternion.identity;
     [SerializeField] private bool reset = false;
 
-    private GameObject Block;
+    [SerializeField] private ParticleSystem ps;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -37,12 +37,13 @@ public class Throw : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         startPosition = transform.position;
         startRotation = transform.rotation;
-        Block = GameObject.Find("Cube Source");
     }
 
     // Update is called once per frame
     void Update()
     {
+        // BLOCK FROM DRAGGING UNDERNEATH PLATFORM --> need to deal w/ in OnMouseDrag
+
         if (landed) {
             return;
         }
@@ -62,7 +63,7 @@ public class Throw : MonoBehaviour
         if (thrown) {
             if (!spawned) {
                 spawned = true;
-                StartCoroutine(SpawnBlockDelay());
+                mainCamera.GetComponent<BlockSpawner>().SpawnBlock(); // from BlockSpawner.cs
             }
             if (Mathf.Abs(rb.velocity.magnitude) <= epsilon && Mathf.Abs(rb.angularVelocity.magnitude) <= epsilon)
             {
@@ -72,19 +73,14 @@ public class Throw : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnBlockDelay() {
-        yield return new WaitForSeconds(spawnDelay);
-        Instantiate(Block, startPosition, startRotation);
-    }
-
     void OnCollisionEnter(Collision collision) {
         if (thrown) {
             if (collision.gameObject.tag == "Despawn") {
-                // add some particle effects later..?
+                Instantiate(ps, transform.position, transform.rotation);
                 Destroy(gameObject); // potentially has race condition w/ instantiation
             }
-
         }
+
     }
 
     void OnMouseDown()
@@ -117,6 +113,7 @@ public class Throw : MonoBehaviour
         Ray camRay = mainCamera.ScreenPointToRay(Input.mousePosition);
         float planeDistance;
         draggingPlane.Raycast(camRay, out planeDistance);
+        // Note: directly setting transform.position is problematic, should use rb.MovePosition instead
         transform.position = camRay.GetPoint(planeDistance) + offset;
     }
 

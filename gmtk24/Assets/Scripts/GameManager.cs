@@ -7,17 +7,17 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
-    bool playingGame = false;
-    private GameObject MainMenu;
-    private GameObject TutorialMenu;
+    public bool playingGame = false;
+    [SerializeField] private GameObject MainMenu;
+    [SerializeField] private GameObject TutorialMenu;
+    [SerializeField] private GameObject GameOverMenu;
     private TextMeshProUGUI timeText;
     private float timeRemaining = 2f;
 
     // Start is called before the first frame update
     void Start()
     {
-        MainMenu = GameObject.Find("Main Menu");
-        TutorialMenu = GameObject.Find("Tutorial Menu");
+
     }
 
     // Update is called once per frame
@@ -51,24 +51,24 @@ public class GameManager : MonoBehaviour
 
     // Is it bad if I put UI stuff here.. I feel like control flow makes sense here tho
 
-    void PlayButton()
+    public void PlayButton()
     {
         TutorialMenu.SetActive(true);
         MainMenu.SetActive(false);
     }
     
-    void BeginButton()
+    public void BeginButton()
     {
         TutorialMenu.SetActive(false);
         playingGame = true;
     }
 
-    void PlayAgainButton()
+    public void PlayAgainButton()
     {
         // restart
     }
 
-    void MainMenuButton()
+    public void MainMenuButton()
     {
         playingGame = false;
         MainMenu.SetActive(true);

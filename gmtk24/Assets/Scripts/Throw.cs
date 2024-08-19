@@ -134,6 +134,7 @@ public class Throw : MonoBehaviour
 
         Vector3 difference = releasePosition - startPosition;
         
+        // Reset throws that are too short or go straight down
         if (difference.magnitude < 70 || difference.y < 0) {
             ResetPosition();
             return;

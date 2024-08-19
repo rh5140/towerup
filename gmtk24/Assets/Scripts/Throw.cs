@@ -50,14 +50,7 @@ public class Throw : MonoBehaviour
 
         // for testing in editor
         if (reset) {
-            transform.position = startPosition;
-            transform.rotation = startRotation;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            reset = false;
-            thrown = false;
-            landed = false;
-            rb.constraints = RigidbodyConstraints.None;
+            ResetPosition();
         }
 
         if (thrown) {
@@ -71,6 +64,18 @@ public class Throw : MonoBehaviour
                 landed = true;
             }
         }
+    }
+
+    void ResetPosition() {
+        deltaHistory.Clear();
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        reset = false;
+        thrown = false;
+        landed = false;
+        rb.constraints = RigidbodyConstraints.None;
     }
 
     void OnCollisionEnter(Collision collision) {
@@ -129,8 +134,8 @@ public class Throw : MonoBehaviour
 
         Vector3 difference = releasePosition - startPosition;
         
-        if (difference.magnitude < 70) {
-            deltaHistory.Clear();
+        if (difference.magnitude < 70 || difference.y < 0) {
+            ResetPosition();
             return;
         }
 

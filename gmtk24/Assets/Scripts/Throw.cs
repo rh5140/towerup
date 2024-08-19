@@ -29,7 +29,6 @@ public class Throw : MonoBehaviour
 
     [SerializeField] private ParticleSystem ps;
 
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -42,7 +41,9 @@ public class Throw : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // BLOCK FROM DRAGGING UNDERNEATH PLATFORM --> need to deal w/ in OnMouseDrag
+        if (!thrown && !mainCamera.GetComponent<GameManager>().playingGame) {
+            DespawnBlock();
+        }
 
         if (landed) {
             return;
@@ -81,11 +82,14 @@ public class Throw : MonoBehaviour
     void OnCollisionEnter(Collision collision) {
         if (thrown) {
             if (collision.gameObject.tag == "Despawn") {
-                Instantiate(ps, transform.position, transform.rotation);
-                Destroy(gameObject); // potentially has race condition w/ instantiation
+                DespawnBlock();
             }
         }
+    }
 
+    void DespawnBlock() {
+        Instantiate(ps, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 
     void OnMouseDown()

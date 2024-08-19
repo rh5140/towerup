@@ -10,8 +10,9 @@ public class BlockSpawner : MonoBehaviour
     private Vector3 startPosition = new Vector3(0, 0.55f, 0);
     private Quaternion startRotation = Quaternion.identity;
     private float spawnDelay = 0.5f;
+    private int numBlocks = 3;
 
-    enum Block {Cube, RectPrism, Cylinder};
+    public enum Block {Cube, RectPrism, Cylinder};
 
     public void SpawnBlock() {
         StartCoroutine(SpawnBlockDelay());
@@ -23,19 +24,20 @@ public class BlockSpawner : MonoBehaviour
         RandomizeBlock();
     }
 
-    void RandomizeBlock() {
-        int block = Random.Range(0,3);
+    public void RandomizeBlock() {
+        Block block = (Block) Random.Range(0,numBlocks);
         switch(block) {
-            case 0: 
+            case Block.Cube: 
                 Instantiate(CubePrefab, startPosition, startRotation);
                 break;
-            case 1: 
+            case Block.RectPrism: 
                 Instantiate(RectPrefab, startPosition, startRotation);
                 break;
-            case 2:
+            case Block.Cylinder:
                 Instantiate(CylPrefab, startPosition, startRotation);
                 break;
             default:
+                Instantiate(CubePrefab, startPosition, startRotation); // NEEDS TO STILL INSTANTIATE SOMETHING OTHERWISE IT CAN SOFTLOCK
                 break;
         }
     }

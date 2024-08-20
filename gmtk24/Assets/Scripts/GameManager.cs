@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject GameOverMenu;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameObject timesUp;
-    private float timeLimit = 4f;
+    private float timeLimit = 60f;
     private float timeRemaining;
 
     // Update is called once per frame
@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayAgainButton()
     {
-        ClearBlocks();
         playingGame = true;
         GameOverMenu.SetActive(false);
         StartGame();
@@ -71,7 +70,6 @@ public class GameManager : MonoBehaviour
 
     public void MainMenuButton()
     {
-        ClearBlocks();
         playingGame = false;
         Timer.SetActive(false);
         GameOverMenu.SetActive(false);
@@ -79,6 +77,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void StartGame() {
+        ClearBlocks();
         ResetNotes();
         playingGame = true;
         timeRemaining = timeLimit;

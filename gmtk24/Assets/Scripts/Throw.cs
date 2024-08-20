@@ -36,7 +36,7 @@ public class Throw : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        mainCamera = Camera.main;
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Need to initialize at awake since we can switch the main camera with keybinds
         rb = GetComponent<Rigidbody>();
         audioSrc = GetComponent<AudioSource>();
         startPosition = transform.position;
@@ -63,7 +63,8 @@ public class Throw : MonoBehaviour
         if (thrown) {
             if (!spawned) {
                 spawned = true;
-                mainCamera.GetComponent<BlockSpawner>().SpawnBlock(); // from BlockSpawner.cs
+                Debug.Log("Spawn next block");
+                gm.mainCamera.GetComponent<BlockSpawner>().SpawnBlock(); // from BlockSpawner.cs
             }
             if (!gm.DoesPieceLock()) return; // Disable piece locking by pressing the keybind set in GameManager
             if (Mathf.Abs(rb.velocity.magnitude) <= epsilon && Mathf.Abs(rb.angularVelocity.magnitude) <= epsilon)
@@ -92,7 +93,7 @@ public class Throw : MonoBehaviour
                 DespawnBlock();
             }
             else if (!playedNote) {
-                audioSrc.clip = Camera.main.GetComponent<AudioManager>().Note();
+                audioSrc.clip = gm.mainCamera.GetComponent<AudioManager>().Note();
                 audioSrc.Play();
                 playedNote = true;
             }

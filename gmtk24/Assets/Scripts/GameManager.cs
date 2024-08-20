@@ -20,7 +20,19 @@ public class GameManager : MonoBehaviour
     private bool firstPlay = true;
 
     [SerializeField] private AudioSource uiAudio;
+    [SerializeField] public Camera mainCamera;
+    [SerializeField] private List<Camera> subCamera;
     private bool doesPieceLock = true; // Does the piece lock in place once it slows down enough?
+
+    void Awake()
+    {
+        //mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        //mainCamera = Camera.main;
+        foreach (var c in subCamera)
+        {
+            c.enabled = false; // Disable all sub-cameras
+        }
+    }
 
     // Update is called once per frame
     void Update() {
@@ -44,9 +56,59 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown("l")) // Piece lock toggle
         {
             doesPieceLock = !doesPieceLock;
-            if (doesPieceLock) uiAudio.clip = Camera.main.GetComponent<AudioManager>().HighNote();
-            else uiAudio.clip = Camera.main.GetComponent<AudioManager>().LowNote();
+            if (doesPieceLock) uiAudio.clip = mainCamera.GetComponent<AudioManager>().HighNote();
+            else uiAudio.clip = mainCamera.GetComponent<AudioManager>().LowNote();
             uiAudio.Play();
+        }
+
+        // Camera toggle
+        if (Input.GetKeyDown("1")) // Main camera
+        {
+            mainCamera.enabled = true;
+            foreach (var c in subCamera)
+            {
+                c.enabled = false; // Disable all sub-cameras
+            }
+        }
+        if (Input.GetKeyDown("2")) // Camera 2
+        {
+            if (subCamera.Count < 1) return;
+            foreach (var c in subCamera)
+            {
+                c.enabled = false; // Disable all sub-cameras
+            }
+            subCamera[0].enabled = true;
+            mainCamera.enabled = false;
+        }
+        if (Input.GetKeyDown("3")) // Camera 3
+        {
+            if (subCamera.Count < 2) return;
+            foreach (var c in subCamera)
+            {
+                c.enabled = false; // Disable all sub-cameras
+            }
+            subCamera[1].enabled = true;
+            mainCamera.enabled = false;
+        }
+        if (Input.GetKeyDown("4")) // Camera 4
+        {
+            if (subCamera.Count < 3) return;
+            foreach (var c in subCamera)
+            {
+                c.enabled = false; // Disable all sub-cameras
+            }
+            subCamera[2].enabled = true;
+            mainCamera.enabled = false;
+        }
+        if (Input.GetKeyDown("5")) // Camera 5
+        {
+            if (subCamera.Count < 4) return;
+            foreach (var c in subCamera)
+            {
+                c.enabled = false; // Disable all sub-cameras
+            }
+            subCamera[3].enabled = true;
+            mainCamera.enabled = false;
         }
     }
 

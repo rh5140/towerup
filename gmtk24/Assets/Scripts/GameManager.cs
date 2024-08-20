@@ -8,17 +8,19 @@ public class GameManager : MonoBehaviour
 {
     public bool playingGame = false;
     [SerializeField] private GameObject MainMenu;
+    [SerializeField] private GameObject MainMenuImage;
     [SerializeField] private GameObject TutorialMenu;
+    [SerializeField] private GameObject TutorialImage;
     [SerializeField] private GameObject Timer;
     [SerializeField] private GameObject GameOverMenu;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameObject timesUp;
     private float timeLimit = 60f;
     private float timeRemaining;
+    private bool firstPlay = true;
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         if (playingGame) {
             if (timeRemaining > 0)
             {
@@ -37,8 +39,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void DisplayTime(float timeToDisplay)
-    {
+    void DisplayTime(float timeToDisplay) {
         timeToDisplay += 1;
 
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
@@ -49,27 +50,36 @@ public class GameManager : MonoBehaviour
 
     // Is it bad if I put UI stuff here.. I feel like control flow makes sense here tho
 
-    public void PlayButton()
-    {
-        TutorialMenu.SetActive(true);
+    public void PlayButton() {
+        ClearBlocks();
         MainMenu.SetActive(false);
+        if (firstPlay) {
+            TutorialSetup();
+            firstPlay = false;
+        }
+        else {
+            StartGame();
+        }
     }
     
-    public void BeginButton()
-    {
-        TutorialMenu.SetActive(false);
-        StartGame();
+    public void BeginButton() {
+        StartCoroutine(WaitForAnim());
     }
 
-    public void PlayAgainButton()
-    {
+    IEnumerator WaitForAnim() {
+        yield return new WaitForSeconds(1f);
+        StartGame();
+        TutorialMenu.SetActive(false);
+    }
+
+    public void PlayAgainButton() {
+        ClearBlocks();
         playingGame = true;
         GameOverMenu.SetActive(false);
         StartGame();
     }
 
-    public void MainMenuButton()
-    {
+    public void MainMenuButton() {
         playingGame = false;
         Timer.SetActive(false);
         GameOverMenu.SetActive(false);
@@ -77,7 +87,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void StartGame() {
-        ClearBlocks();
+        MainMenuImage.SetActive(false);
         ResetNotes();
         playingGame = true;
         timeRemaining = timeLimit;
@@ -85,6 +95,10 @@ public class GameManager : MonoBehaviour
         Timer.SetActive(true);
         timeText.gameObject.SetActive(true);
         timesUp.SetActive(false);
+    }
+
+    private void TutorialSetup() {
+        TutorialMenu.SetActive(true);
     }
 
     private void GameOver() {

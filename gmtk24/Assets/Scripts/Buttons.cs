@@ -23,3 +23,6 @@ public class Buttons : MonoBehaviour
         buttonText.fontSize = initialFontSize;
     }
 }
+// DDE6FF
+// B0C2F2
+// 90A8ED

@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 4669081075953887752}
   - component: {fileID: 3283978021025973361}
   - component: {fileID: 9142851740305170505}
-  - component: {fileID: 3679880577247266812}
+  - component: {fileID: 2793758972851161548}
   - component: {fileID: 3406695256080326400}
   - component: {fileID: 863812486112302917}
   m_Layer: 0
-  m_Name: WBlock1 1
+  m_Name: TetrominoT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 5983652432516872168}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.55, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.067, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5983652432516872168}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 2091451854857570901, guid: af19ca223b6420243929e9f06df6c6b4, type: 3}
 --- !u!23 &9142851740305170505
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9440ae5a4a4507c47a26dc24cd681ad0, type: 2}
+  - {fileID: 2100000, guid: eaed404392edf3447952ce7ec3c9b05a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,8 +86,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3679880577247266812
-BoxCollider:
+--- !u!64 &2793758972851161548
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -104,9 +104,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2091451854857570901, guid: af19ca223b6420243929e9f06df6c6b4, type: 3}
 --- !u!54 &3406695256080326400
 Rigidbody:
   m_ObjectHideFlags: 0

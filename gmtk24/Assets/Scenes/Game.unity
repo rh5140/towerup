@@ -1068,7 +1068,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'developed for GMTK Game Jam 2024: Build to Scale
+  m_text: 'developed for GMTK Game Jam 2024: Built to Scale
 
     by Ray H (design/code)
     and Alexander C (3D/tech art)'

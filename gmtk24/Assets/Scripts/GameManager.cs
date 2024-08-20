@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject GameOverMenu;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameObject timesUp;
-    private float timeLimit = 60f;
+    private float timeLimit = 4f;
     private float timeRemaining;
 
     // Update is called once per frame

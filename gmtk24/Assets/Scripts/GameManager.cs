@@ -6,19 +6,15 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-
     public bool playingGame = false;
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject TutorialMenu;
+    [SerializeField] private GameObject Timer;
     [SerializeField] private GameObject GameOverMenu;
-    private TextMeshProUGUI timeText;
-    private float timeRemaining = 2f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private GameObject timesUp;
+    private float timeLimit = 60f;
+    private float timeRemaining;
 
     // Update is called once per frame
     void Update()
@@ -27,14 +23,16 @@ public class GameManager : MonoBehaviour
             if (timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
-                // DisplayTime(timeRemaining);
+                DisplayTime(timeRemaining);
             }
             else
             {
                 Debug.Log("Time has run out!");
                 timeRemaining = 0;
+                timeText.gameObject.SetActive(false);
+                timesUp.SetActive(true);
                 playingGame = false;
-                // GameOver();
+                GameOver();
             }
         }
     }
@@ -43,10 +41,10 @@ public class GameManager : MonoBehaviour
     {
         timeToDisplay += 1;
 
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60); 
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
 
-        timeText.text = "Time remaining: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+        timeText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
     }
 
     // Is it bad if I put UI stuff here.. I feel like control flow makes sense here tho
@@ -60,18 +58,50 @@ public class GameManager : MonoBehaviour
     public void BeginButton()
     {
         TutorialMenu.SetActive(false);
-        playingGame = true;
+        StartGame();
     }
 
     public void PlayAgainButton()
     {
-        // restart
+        ClearBlocks();
+        playingGame = true;
+        GameOverMenu.SetActive(false);
+        StartGame();
     }
 
     public void MainMenuButton()
     {
+        ClearBlocks();
         playingGame = false;
+        Timer.SetActive(false);
+        GameOverMenu.SetActive(false);
         MainMenu.SetActive(true);
+    }
+
+    private void StartGame() {
+        ResetNotes();
+        playingGame = true;
+        timeRemaining = timeLimit;
+        gameObject.GetComponent<BlockSpawner>().RandomizeBlock();
+        Timer.SetActive(true);
+        timeText.gameObject.SetActive(true);
+        timesUp.SetActive(false);
+    }
+
+    private void GameOver() {
+        GameOverMenu.SetActive(true);
+    }
+
+    private void ClearBlocks() {
+        foreach (var gameObj in GameObject.FindGameObjectsWithTag("Block")){
+            Destroy(gameObj);
+        }
+    }
+
+    private void ResetNotes() {
+        Camera.main.GetComponent<AudioManager>().repeats = 0;
+        Camera.main.GetComponent<AudioManager>().noteIdx = 0;
+        Camera.main.GetComponent<AudioManager>().ascending = true;
     }
 
 }

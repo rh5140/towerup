@@ -13,6 +13,7 @@ public class Throw : MonoBehaviour
     private Vector3 offset;
     private Camera mainCamera;
     private Rigidbody rb;
+    private AudioSource audioSrc;
 
     private int deltaHistorySize = 10;
     private readonly Queue<Vector3> deltaHistory = new();
@@ -23,18 +24,20 @@ public class Throw : MonoBehaviour
     private bool spawned = false;
     private double epsilon = 0.05;
 
+    private bool playedNote = false;
+
     private Vector3 startPosition = new Vector3(0, 0.55f, 0);
     private Quaternion startRotation = Quaternion.identity;
     [SerializeField] private bool reset = false;
 
     [SerializeField] private ParticleSystem ps;
 
-
     // Start is called before the first frame update
     void Awake()
     {
         mainCamera = Camera.main;
         rb = GetComponent<Rigidbody>();
+        audioSrc = GetComponent<AudioSource>();
         startPosition = transform.position;
         startRotation = transform.rotation;
     }
@@ -42,7 +45,9 @@ public class Throw : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // BLOCK FROM DRAGGING UNDERNEATH PLATFORM --> need to deal w/ in OnMouseDrag
+        if (!thrown && !mainCamera.GetComponent<GameManager>().playingGame) {
+            DespawnBlock();
+        }
 
         if (landed) {
             return;
@@ -81,12 +86,21 @@ public class Throw : MonoBehaviour
     void OnCollisionEnter(Collision collision) {
         if (thrown) {
             if (collision.gameObject.tag == "Despawn") {
-                Instantiate(ps, transform.position, transform.rotation);
-                Destroy(gameObject); // potentially has race condition w/ instantiation
+                DespawnBlock();
+            }
+            else if (!playedNote) {
+                audioSrc.clip = Camera.main.GetComponent<AudioManager>().Note();
+                audioSrc.Play();
+                playedNote = true;
             }
         }
-
     }
+
+    void DespawnBlock() {
+        Instantiate(ps, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
+
 
     void OnMouseDown()
     {

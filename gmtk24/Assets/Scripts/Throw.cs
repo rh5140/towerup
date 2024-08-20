@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class Throw : MonoBehaviour
 {
+    private GameManager gm;
     private Plane draggingPlane;
     private Vector3 offset;
     private Camera mainCamera;
@@ -40,12 +41,13 @@ public class Throw : MonoBehaviour
         audioSrc = GetComponent<AudioSource>();
         startPosition = transform.position;
         startRotation = transform.rotation;
+        gm = mainCamera.GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!thrown && !mainCamera.GetComponent<GameManager>().playingGame) {
+        if (!thrown && !gm.playingGame) {
             DespawnBlock();
         }
 
@@ -63,6 +65,7 @@ public class Throw : MonoBehaviour
                 spawned = true;
                 mainCamera.GetComponent<BlockSpawner>().SpawnBlock(); // from BlockSpawner.cs
             }
+            if (!gm.DoesPieceLock()) return; // Disable piece locking by pressing the keybind set in GameManager
             if (Mathf.Abs(rb.velocity.magnitude) <= epsilon && Mathf.Abs(rb.angularVelocity.magnitude) <= epsilon)
             {
                 rb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;

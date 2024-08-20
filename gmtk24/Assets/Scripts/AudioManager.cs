@@ -6,6 +6,8 @@ public class AudioManager : MonoBehaviour
 {
     [SerializeField] public AudioClip[] meows;
     [SerializeField] public AudioClip[] notes;
+    [SerializeField] private int highNoteIndex;
+    [SerializeField] private int lowNoteIndex;
     private int maxRepeats = 1;
     public bool ascending = true;
     public int repeats = 0;
@@ -38,5 +40,15 @@ public class AudioManager : MonoBehaviour
         repeats += 1;
 
         return notes[noteIdx];
+    }
+
+    public AudioClip HighNote() { // Happy sound for UI
+        if (highNoteIndex >= 0 && highNoteIndex < notes.Length) return notes[highNoteIndex];
+        else return notes[notes.Length - 1];
+    }
+    
+    public AudioClip LowNote() { // Sad sound for UI
+        if (lowNoteIndex >= 0 && lowNoteIndex < notes.Length) return notes[lowNoteIndex];
+        else return notes[0];
     }
 }

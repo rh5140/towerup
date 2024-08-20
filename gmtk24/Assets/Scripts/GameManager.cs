@@ -15,9 +15,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject GameOverMenu;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameObject timesUp;
-    private float timeLimit = 60f;
+    [SerializeField] private float timeLimit = 60f;
     private float timeRemaining;
     private bool firstPlay = true;
+
+    [SerializeField] private AudioSource uiAudio;
+    private bool doesPieceLock = true; // Does the piece lock in place once it slows down enough?
 
     // Update is called once per frame
     void Update() {
@@ -37,6 +40,14 @@ public class GameManager : MonoBehaviour
                 GameOver();
             }
         }
+
+        if (Input.GetKeyDown("l")) // Piece lock toggle
+        {
+            doesPieceLock = !doesPieceLock;
+            if (doesPieceLock) uiAudio.clip = Camera.main.GetComponent<AudioManager>().HighNote();
+            else uiAudio.clip = Camera.main.GetComponent<AudioManager>().LowNote();
+            uiAudio.Play();
+        }
     }
 
     void DisplayTime(float timeToDisplay) {
@@ -53,13 +64,13 @@ public class GameManager : MonoBehaviour
     public void PlayButton() {
         ClearBlocks();
         MainMenu.SetActive(false);
-        if (firstPlay) {
+        //if (firstPlay) {
             TutorialSetup();
-            firstPlay = false;
-        }
-        else {
-            StartGame();
-        }
+        //    firstPlay = false;
+        //}
+        //else {
+        //    StartGame();
+        //}
     }
     
     public void BeginButton() {
@@ -67,13 +78,13 @@ public class GameManager : MonoBehaviour
     }
 
     IEnumerator WaitForAnim() {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         StartGame();
         TutorialMenu.SetActive(false);
     }
 
     public void PlayAgainButton() {
-        ClearBlocks();
+        //ClearBlocks();
         playingGame = true;
         GameOverMenu.SetActive(false);
         StartGame();
@@ -87,6 +98,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void StartGame() {
+        ClearBlocks();
         MainMenuImage.SetActive(false);
         ResetNotes();
         playingGame = true;
@@ -116,5 +128,11 @@ public class GameManager : MonoBehaviour
         Camera.main.GetComponent<AudioManager>().noteIdx = 0;
         Camera.main.GetComponent<AudioManager>().ascending = true;
     }
+
+    public bool DoesPieceLock()
+    {
+        return doesPieceLock;
+    }
+    
 
 }

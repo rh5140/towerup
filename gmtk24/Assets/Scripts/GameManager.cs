@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject timesUp;
     [SerializeField] private float timeLimit = 60f;
     private float timeRemaining;
-    private bool firstPlay = true;
 
     [SerializeField] private AudioSource uiAudio;
     [SerializeField] public Camera mainCamera;
@@ -135,13 +134,7 @@ public class GameManager : MonoBehaviour
     public void PlayButton() {
         ClearBlocks();
         MainMenu.SetActive(false);
-        //if (firstPlay) {
-            TutorialSetup();
-        //    firstPlay = false;
-        //}
-        //else {
-        //    StartGame();
-        //}
+        TutorialSetup();
     }
     
     public void BeginButton() {

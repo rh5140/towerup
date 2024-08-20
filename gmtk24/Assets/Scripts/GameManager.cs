@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public Camera mainCamera;
     [SerializeField] private List<Camera> subCamera;
     private bool doesPieceLock = true; // Does the piece lock in place once it slows down enough?
+    private bool isRandomWeighted = true; // Do the pieces spawn based on the weights specified in the insepector, or is it pure random?
 
     void Awake()
     {
@@ -110,6 +111,14 @@ public class GameManager : MonoBehaviour
             subCamera[3].enabled = true;
             mainCamera.enabled = false;
         }
+
+        if (Input.GetKeyDown("r")) // Random Weighting toggle
+        {
+            isRandomWeighted = !isRandomWeighted;
+            if (isRandomWeighted) uiAudio.clip = mainCamera.GetComponent<AudioManager>().HighNote();
+            else uiAudio.clip = mainCamera.GetComponent<AudioManager>().LowNote();
+            uiAudio.Play();
+        }
     }
 
     void DisplayTime(float timeToDisplay) {
@@ -196,5 +205,9 @@ public class GameManager : MonoBehaviour
         return doesPieceLock;
     }
     
+    public bool IsRandomWeighted()
+    {
+        return isRandomWeighted;
+    }
 
 }

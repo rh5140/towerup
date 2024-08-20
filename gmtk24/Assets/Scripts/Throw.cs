@@ -13,6 +13,7 @@ public class Throw : MonoBehaviour
     private Vector3 offset;
     private Camera mainCamera;
     private Rigidbody rb;
+    private AudioSource audioSrc;
 
     private int deltaHistorySize = 10;
     private readonly Queue<Vector3> deltaHistory = new();
@@ -22,6 +23,8 @@ public class Throw : MonoBehaviour
     private bool landed = false;
     private bool spawned = false;
     private double epsilon = 0.05;
+
+    private bool playedNote = false;
 
     private Vector3 startPosition = new Vector3(0, 0.55f, 0);
     private Quaternion startRotation = Quaternion.identity;
@@ -34,6 +37,7 @@ public class Throw : MonoBehaviour
     {
         mainCamera = Camera.main;
         rb = GetComponent<Rigidbody>();
+        audioSrc = GetComponent<AudioSource>();
         startPosition = transform.position;
         startRotation = transform.rotation;
     }
@@ -84,6 +88,11 @@ public class Throw : MonoBehaviour
             if (collision.gameObject.tag == "Despawn") {
                 DespawnBlock();
             }
+            else if (!playedNote) {
+                audioSrc.clip = Camera.main.GetComponent<AudioManager>().Note();
+                audioSrc.Play();
+                playedNote = true;
+            }
         }
     }
 
@@ -91,6 +100,7 @@ public class Throw : MonoBehaviour
         Instantiate(ps, transform.position, transform.rotation);
         Destroy(gameObject);
     }
+
 
     void OnMouseDown()
     {

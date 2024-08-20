@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class DestroyPS : MonoBehaviour
 {
-    private float lifetime = 0.5f;
+    private float lifetime = 1.5f;
 
     void Awake()
     {
+        AudioSource audioSrc = gameObject.GetComponent<AudioSource>();
+        audioSrc.clip = Camera.main.GetComponent<AudioManager>().Meow();
+        audioSrc.Play();
         StartCoroutine(CleanUp());
     }
 

@@ -6,15 +6,14 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-
     public bool playingGame = false;
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject TutorialMenu;
     [SerializeField] private GameObject Timer;
     [SerializeField] private GameObject GameOverMenu;
     [SerializeField] private TextMeshProUGUI timeText;
-    [SerializeField] private TextMeshProUGUI timesUp;
-    private float timeLimit = 10f;
+    [SerializeField] private GameObject timesUp;
+    private float timeLimit = 60f;
     private float timeRemaining;
 
     // Update is called once per frame
@@ -30,8 +29,8 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Time has run out!");
                 timeRemaining = 0;
-                timeText.enabled = false;
-                timesUp.enabled = true;
+                timeText.gameObject.SetActive(false);
+                timesUp.SetActive(true);
                 playingGame = false;
                 GameOver();
             }
@@ -80,12 +79,13 @@ public class GameManager : MonoBehaviour
     }
 
     private void StartGame() {
+        ResetNotes();
         playingGame = true;
         timeRemaining = timeLimit;
         gameObject.GetComponent<BlockSpawner>().RandomizeBlock();
         Timer.SetActive(true);
-        timeText.enabled = true;
-        timesUp.enabled = false;
+        timeText.gameObject.SetActive(true);
+        timesUp.SetActive(false);
     }
 
     private void GameOver() {
@@ -96,6 +96,12 @@ public class GameManager : MonoBehaviour
         foreach (var gameObj in GameObject.FindGameObjectsWithTag("Block")){
             Destroy(gameObj);
         }
+    }
+
+    private void ResetNotes() {
+        Camera.main.GetComponent<AudioManager>().repeats = 0;
+        Camera.main.GetComponent<AudioManager>().noteIdx = 0;
+        Camera.main.GetComponent<AudioManager>().ascending = true;
     }
 
 }
